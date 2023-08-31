@@ -21,7 +21,7 @@ const handleListClick = (event) => {
 
     console.log(galleryItem)
 
-    const modalInstance = basicLightbox.create(`<div class="gallery__item"><img class="gallery__image" src=${galleryItem.original} alt=${galleryItem.description}/></div>`);
+    const modalInstance = basicLightbox.create(`<div class="gallery__item"><img src=${galleryItem.original} alt=${galleryItem.description}/></div>`);
     
     modalInstance.show();
 }
