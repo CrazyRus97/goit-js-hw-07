@@ -3,15 +3,15 @@ import { galleryItems } from './gallery-items.js';
 
 console.log(galleryItems);
 
-const listEl = document.querySelector(".gallery")
+const galleryContainer = document.querySelector(".gallery")
 
-const renderlist = (arr) => arr.map(item => (`<li data-id=${arr.indexOf(item)} class="gallery__item gallery__link js-product-item"><img class="gallery__image" src=${item.preview} alt=${item.description}/></li>`)).join("");
+const renderlist = (arr) => arr.map(item => (`<li data-id=${arr.indexOf(item)} class="gallery__item"><img class="gallery__image" src=${item.preview} alt=${item.description}/></li>`)).join("");
 
 const handleListClick = (event) => {
     if (event.currentTarget === event.target) {
         return;
     }
-    const currentListItem = event.target.closest(".js-product-item");
+    const currentListItem = event.target.closest(".gallery__item");
     const itemId = +currentListItem.dataset.id;
     console.log(itemId)
     // const galleryItem = galleryItems.find(item => {
@@ -19,12 +19,28 @@ const handleListClick = (event) => {
     // })
     const galleryItem = galleryItems[itemId]
 
-    console.log(galleryItem)
-
-    const modalInstance = basicLightbox.create(`<div class="gallery__item"><img src=${galleryItem.original} alt=${galleryItem.description}/></div>`);
+    const modalInstance = basicLightbox.create(`<div class="gallery__item"><img src=${galleryItem.original} alt=${galleryItem.description}/></div>`,
+    {
+       onShow: (instance) => {
+         window.addEventListener('keydown', onEscKeyPress);
+      },
+       onClose: (instance) => {
+         window.removeEventListener('keydown', onEscKeyPress);
+      },
+    });
     
     modalInstance.show();
+
+    function onEscKeyPress(event) {
+      const ESC_KEY_CODE = 'Escape';
+      const isEscKey = event.code === ESC_KEY_CODE;
+      if (!isEscKey) return;
+      modalInstance.close();
+  }
 }
 
-listEl.insertAdjacentHTML("beforeend", renderlist(galleryItems))
-listEl.addEventListener("click", handleListClick)
+
+
+
+galleryContainer.insertAdjacentHTML("beforeend", renderlist(galleryItems))
+galleryContainer.addEventListener("click", handleListClick)
